@@ -14,13 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      raffle_groups: {
+        Row: {
+          buyer_name: string | null
+          group_number: number
+          numbers: string[]
+          taken: boolean
+          taken_at: string | null
+        }
+        Insert: {
+          buyer_name?: string | null
+          group_number: number
+          numbers: string[]
+          taken?: boolean
+          taken_at?: string | null
+        }
+        Update: {
+          buyer_name?: string | null
+          group_number?: number
+          numbers?: string[]
+          taken?: boolean
+          taken_at?: string | null
+        }
+        Relationships: []
+      }
+      raffle_orders: {
+        Row: {
+          buyer_name: string
+          contact: string
+          created_at: string
+          group_number: number
+          id: string
+        }
+        Insert: {
+          buyer_name: string
+          contact: string
+          created_at?: string
+          group_number: number
+          id?: string
+        }
+        Update: {
+          buyer_name?: string
+          contact?: string
+          created_at?: string
+          group_number?: number
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "raffle_orders_group_number_fkey"
+            columns: ["group_number"]
+            isOneToOne: false
+            referencedRelation: "raffle_groups"
+            referencedColumns: ["group_number"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      reserve_group: {
+        Args: { p_contact: string; p_group: number; p_name: string }
+        Returns: {
+          group_number: number
+          numbers: string[]
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
