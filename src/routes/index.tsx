@@ -167,24 +167,6 @@ function Index() {
         )}
       </section>
 
-      {selectedGroup && (
-        <div className="fixed inset-x-0 bottom-0 border-t border-border bg-card/95 p-4 backdrop-blur">
-          <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
-            <div>
-              <p className="text-xs text-muted-foreground">Grupo seleccionado</p>
-              <p className="font-bold tabular-nums">
-                N° {selectedGroup.group_number} · {selectedGroup.numbers.join(" ")}
-              </p>
-            </div>
-            <Button onClick={() => setSelected(selectedGroup.group_number)} asChild={false}>
-              <span onClick={() => document.getElementById("comprar-form")?.focus()}>
-                Comprar
-              </span>
-            </Button>
-          </div>
-        </div>
-      )}
-
       <Dialog
         open={selected !== null}
         onOpenChange={(open) => !open && setSelected(null)}
