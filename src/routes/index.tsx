@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { GroupCard, type RaffleGroup } from "@/components/raffle/GroupCard";
 import { buildWhatsappLink, buildWhatsappMessage } from "@/lib/raffle";
+import licuadoraImg from "@/assets/licuadora.jpg";
+import airfryerImg from "@/assets/airfryer.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -113,19 +115,53 @@ function Index() {
   return (
     <main className="min-h-screen bg-background pb-24">
       <header
-        className="px-5 pb-10 pt-10 text-primary-foreground"
+        className="relative overflow-hidden px-5 pb-12 pt-10 text-primary-foreground"
         style={{ background: "var(--gradient-hero)" }}
       >
-        <div className="mx-auto max-w-3xl text-center">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-16 -top-16 size-56 rounded-full bg-accent/20 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-24 -right-10 size-64 rounded-full bg-accent/15 blur-3xl"
+        />
+        <div className="relative mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider">
             <Ticket className="size-3.5" /> Gran rifa
           </span>
-          <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl">
-            Gánate una licuadora o una airfryer
+          <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-5xl">
+            Gran oportunidad de ganar:
+            <span className="mt-1 block text-accent">
+              una licuadora o una airfryer
+            </span>
           </h1>
-          <p className="mt-1 text-xs opacity-80">o si prefieres, el efectivo</p>
+          <p className="mt-2 text-xs opacity-80">o si prefieres, el efectivo</p>
 
-          <div className="mt-6 inline-block rounded-2xl bg-accent px-7 py-4 text-accent-foreground shadow-lg">
+          <div className="mx-auto mt-6 grid max-w-md grid-cols-2 gap-3">
+            {[
+              { src: licuadoraImg, label: "Licuadora" },
+              { src: airfryerImg, label: "Airfryer" },
+            ].map((p) => (
+              <figure
+                key={p.label}
+                className="overflow-hidden rounded-2xl bg-primary-foreground/10 p-2 ring-1 ring-primary-foreground/20 backdrop-blur-sm"
+              >
+                <img
+                  src={p.src}
+                  alt={`Premio de la rifa: ${p.label}`}
+                  width={816}
+                  height={816}
+                  className="aspect-square w-full rounded-xl object-cover"
+                />
+                <figcaption className="py-1.5 text-xs font-bold uppercase tracking-wide">
+                  {p.label}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <div className="mt-6 inline-block rotate-[-1.5deg] rounded-2xl bg-accent px-8 py-4 text-accent-foreground shadow-xl ring-4 ring-accent/30">
             <p className="text-[11px] font-bold uppercase tracking-widest">Valor</p>
             <p className="text-4xl font-black tabular-nums sm:text-5xl">$20.000</p>
           </div>
