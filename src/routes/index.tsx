@@ -159,12 +159,12 @@ function Index() {
             ].map((p) => (
               <figure
                 key={p.label}
-                className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-secondary/80 to-card p-2 shadow-[0_0_45px_-10px_oklch(0.55_0.25_280/0.55)] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:border-primary/50 hover:shadow-[0_0_60px_-5px_oklch(0.7_0.28_300/0.65)] float"
+                className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-secondary/80 to-card p-2 shadow-[0_0_45px_-10px_oklch(0.55_0.25_280/0.55)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_0_60px_-5px_oklch(0.7_0.28_300/0.65)] float"
                 style={{
-                  rotate: p.rotate,
+                  "--float-rotate": p.rotate,
                   transformStyle: "preserve-3d",
                   animationDelay: p.delay,
-                }}
+                } as React.CSSProperties}
               >
                 <div className="shimmer-bg pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity group-hover:opacity-100" />
                 <img
