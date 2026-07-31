@@ -78,14 +78,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Rifa de Malik — Licuadora o Airfryer | 15 de agosto" },
+      { name: "description", content: "Compra tu grupo de 4 números por $20.000 y gana una licuadora o una airfryer. Juega el 15 de agosto con la Lotería de Boyacá." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Rifa de Malik — Licuadora o Airfryer | 15 de agosto" },
+      { property: "og:description", content: "Compra tu grupo de 4 números por $20.000 y gana una licuadora o una airfryer. Juega el 15 de agosto con la Lotería de Boyacá." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Rifa de Malik — Licuadora o Airfryer | 15 de agosto" },
+      { name: "twitter:description", content: "Compra tu grupo de 4 números por $20.000 y gana una licuadora o una airfryer. Juega el 15 de agosto con la Lotería de Boyacá." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/01fa99eb-4e43-4af2-86ea-93e30bceb07e/id-preview-506f9f5d--6b8738a2-83c7-4598-9b41-22d15ae48030.lovable.app-1785537784347.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/01fa99eb-4e43-4af2-86ea-93e30bceb07e/id-preview-506f9f5d--6b8738a2-83c7-4598-9b41-22d15ae48030.lovable.app-1785537784347.png" },
     ],
     links: [
       {

@@ -30,11 +30,11 @@ export const Route = createFileRoute("/")({
         content:
           "Compra tu grupo de 4 números por $20.000 y gana una licuadora o una airfryer. Juega el 15 de agosto con la Lotería de Boyacá.",
       },
-      { property: "og:title", content: "Rifa de Malik — Licuadora o Airfryer" },
+      { property: "og:title", content: "Rifa de Malik — Licuadora o Airfryer | 15 de agosto" },
       {
         property: "og:description",
         content:
-          "25 grupos de 4 números a $20.000. Juega con las dos últimas cifras de la Lotería de Boyacá el 15 de agosto.",
+          "Compra tu grupo de 4 números por $20.000 y gana una licuadora o una airfryer. Juega el 15 de agosto con la Lotería de Boyacá.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
