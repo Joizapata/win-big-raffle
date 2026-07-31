@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Dices, Loader2, PartyPopper, Sparkles, Ticket } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
