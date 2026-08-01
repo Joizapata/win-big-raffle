@@ -108,11 +108,6 @@ function Index() {
     toast.success(`Te tocó el grupo N° ${pick.group_number}`);
   };
 
-  const message = purchase
-    ? buildWhatsappMessage(purchase.name, purchase.groupNumber, purchase.numbers)
-    : "";
-  const waLink = purchase ? buildWhatsappLink(purchase.contact, message) : null;
-
   return (
     <main className="min-h-screen bg-background pb-24">
       <header
@@ -329,33 +324,16 @@ function Index() {
             </div>
           </div>
 
-          {waLink ? (
-            <Button
-              asChild
-              className="w-full border border-accent/30 bg-gradient-to-r from-primary to-accent font-bold text-white shadow-accent hover:opacity-95"
-            >
-              <a href={waLink} target="_blank" rel="noopener noreferrer">
-                Enviar confirmación por WhatsApp
-              </a>
-            </Button>
-          ) : (
-            <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">
-                Registraste un usuario ({purchase?.contact}). Copia el mensaje y envíaselo
-                por WhatsApp.
-              </p>
-              <Button
-                variant="secondary"
-                className="w-full"
-                onClick={() => {
-                  navigator.clipboard.writeText(message);
-                  toast.success("Mensaje copiado");
-                }}
-              >
-                Copiar mensaje
-              </Button>
-            </div>
-          )}
+          <p className="text-center text-xs text-muted-foreground">
+            Malik te enviará la confirmación con tus números por WhatsApp a{" "}
+            <span className="font-semibold text-foreground">{purchase?.contact}</span>.
+          </p>
+          <Button
+            className="w-full border border-accent/30 bg-gradient-to-r from-primary to-accent font-bold text-white shadow-accent hover:opacity-95"
+            onClick={() => setPurchase(null)}
+          >
+            Listo
+          </Button>
         </DialogContent>
       </Dialog>
     </main>
