@@ -57,7 +57,7 @@ function Index() {
     queryFn: async (): Promise<RaffleGroup[]> => {
       const { data, error } = await supabase
         .from("raffle_groups")
-        .select("group_number, numbers, taken, buyer_name")
+        .select("group_number, numbers, taken")
         .order("group_number");
       if (error) throw error;
       return (data ?? []) as RaffleGroup[];
@@ -191,8 +191,12 @@ function Index() {
             </p>
           </div>
 
-          <p className="mx-auto mt-8 max-w-lg text-sm font-medium leading-relaxed text-foreground/85">
-            25 grupos de 4 números. Juega el <strong className="text-primary text-glow">15 de agosto</strong>{" "}
+          <p className="mt-6 text-lg font-extrabold uppercase tracking-wide text-accent text-glow-accent sm:text-xl">
+            ¡Tienes 4 oportunidades de ganar!
+          </p>
+
+          <p className="mx-auto mt-4 max-w-lg text-sm font-medium leading-relaxed text-foreground/85">
+            Juega el <strong className="text-primary text-glow">15 de agosto</strong>{" "}
             con las dos últimas cifras de la{" "}
             <strong className="text-primary text-glow">Lotería de Boyacá</strong>.
           </p>
