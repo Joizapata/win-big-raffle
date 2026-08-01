@@ -5,7 +5,6 @@ export type RaffleGroup = {
   group_number: number;
   numbers: string[];
   taken: boolean;
-  buyer_name: string | null;
 };
 
 export function GroupCard({
@@ -87,11 +86,6 @@ export function GroupCard({
         ))}
       </div>
 
-      {group.taken && group.buyer_name && (
-        <p className="mt-2 truncate text-[11px] font-semibold text-muted-foreground">
-          Comprado por {group.buyer_name}
-        </p>
-      )}
     </button>
   );
 }
