@@ -17,7 +17,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { GroupCard, type RaffleGroup } from "@/components/raffle/GroupCard";
-import { buildWhatsappLink, buildWhatsappMessage } from "@/lib/raffle";
 import licuadoraImg from "@/assets/licuadora.jpg";
 import airfryerImg from "@/assets/airfryer.jpg";
 
