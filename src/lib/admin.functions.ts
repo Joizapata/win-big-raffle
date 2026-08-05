@@ -33,3 +33,15 @@ export const adminOrders = createServerFn({ method: "GET" }).handler(async () =>
   if (!session.data.unlocked) throw new Error("No autorizado");
   return listOrders();
 });
+
+export const adminSetPaid = createServerFn({ method: "POST" })
+  .inputValidator((data: { id: string; paid: boolean }) => ({
+    id: String(data?.id ?? "").slice(0, 64),
+    paid: Boolean(data?.paid),
+  }))
+  .handler(async ({ data }) => {
+    const { getAdminSession, setOrderPaid } = await import("./admin.server");
+    const session = await getAdminSession();
+    if (!session.data.unlocked) throw new Error("No autorizado");
+    return setOrderPaid(data.id, data.paid);
+  });

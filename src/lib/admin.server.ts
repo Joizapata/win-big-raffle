@@ -34,13 +34,15 @@ export type AdminOrder = {
   contact: string;
   created_at: string;
   numbers: string[];
+  paid: boolean;
+  paid_at: string | null;
 };
 
 export async function listOrders(): Promise<AdminOrder[]> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("raffle_orders")
-    .select("id, group_number, buyer_name, contact, created_at")
+    .select("id, group_number, buyer_name, contact, created_at, paid, paid_at")
     .order("created_at", { ascending: false });
   if (error) throw error;
   const orders = data ?? [];
@@ -50,4 +52,14 @@ export async function listOrders(): Promise<AdminOrder[]> {
   if (gErr) throw gErr;
   const byGroup = new Map((groups ?? []).map((g) => [g.group_number, g.numbers]));
   return orders.map((o) => ({ ...o, numbers: byGroup.get(o.group_number) ?? [] }));
+}
+
+export async function setOrderPaid(id: string, paid: boolean) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { error } = await supabaseAdmin
+    .from("raffle_orders")
+    .update({ paid, paid_at: paid ? new Date().toISOString() : null })
+    .eq("id", id);
+  if (error) throw error;
+  return { ok: true as const };
 }

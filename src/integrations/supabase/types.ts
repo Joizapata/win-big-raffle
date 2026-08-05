@@ -45,6 +45,8 @@ export type Database = {
           created_at: string
           group_number: number
           id: string
+          paid: boolean
+          paid_at: string | null
         }
         Insert: {
           buyer_name: string
@@ -52,6 +54,8 @@ export type Database = {
           created_at?: string
           group_number: number
           id?: string
+          paid?: boolean
+          paid_at?: string | null
         }
         Update: {
           buyer_name?: string
@@ -59,6 +63,8 @@ export type Database = {
           created_at?: string
           group_number?: number
           id?: string
+          paid?: boolean
+          paid_at?: string | null
         }
         Relationships: [
           {

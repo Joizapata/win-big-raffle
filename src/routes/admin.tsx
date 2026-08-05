@@ -2,14 +2,20 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Copy, Loader2, LockKeyhole, LogOut, MessageCircle } from "lucide-react";
+import { BellRing, Check, Copy, Loader2, LockKeyhole, LogOut, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { adminLogin, adminLogout, adminOrders, adminStatus } from "@/lib/admin.functions";
-import { buildWhatsappLink, buildWhatsappMessage } from "@/lib/raffle";
+import {
+  adminLogin,
+  adminLogout,
+  adminOrders,
+  adminSetPaid,
+  adminStatus,
+} from "@/lib/admin.functions";
+import { buildReminderMessage, buildWhatsappLink, buildWhatsappMessage } from "@/lib/raffle";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -40,6 +46,8 @@ type Order = {
   contact: string;
   created_at: string;
   numbers: string[];
+  paid: boolean;
+  paid_at: string | null;
 };
 
 function AdminPage() {
@@ -48,6 +56,7 @@ function AdminPage() {
   const login = useServerFn(adminLogin);
   const logout = useServerFn(adminLogout);
   const orders = useServerFn(adminOrders);
+  const setPaid = useServerFn(adminSetPaid);
   const [password, setPassword] = useState("");
 
   const session = useQuery({
@@ -81,6 +90,15 @@ function AdminPage() {
       queryClient.clear();
       queryClient.invalidateQueries({ queryKey: ["admin-status"] });
     },
+  });
+
+  const paidMutation = useMutation({
+    mutationFn: (vars: { id: string; paid: boolean }) => setPaid({ data: vars }),
+    onSuccess: (_res, vars) => {
+      toast.success(vars.paid ? "Marcado como pagado" : "Marcado como pendiente");
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+    },
+    onError: () => toast.error("No se pudo actualizar el pago"),
   });
 
   if (!unlocked) {
@@ -164,6 +182,8 @@ function AdminPage() {
             {list.map((o) => {
               const message = buildWhatsappMessage(o.buyer_name, o.group_number, o.numbers);
               const link = buildWhatsappLink(o.contact, message);
+              const reminder = buildReminderMessage(o.buyer_name, o.group_number, o.numbers);
+              const reminderLink = buildWhatsappLink(o.contact, reminder);
               return (
                 <article
                   key={o.id}
@@ -177,6 +197,28 @@ function AdminPage() {
                     <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-primary">
                       Grupo {o.group_number}
                     </span>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-wider ${
+                        o.paid
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : "bg-amber-500/15 text-amber-400"
+                      }`}
+                    >
+                      {o.paid ? "Pagado" : "Pago pendiente"}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant={o.paid ? "secondary" : "default"}
+                      className="gap-2"
+                      disabled={paidMutation.isPending}
+                      onClick={() => paidMutation.mutate({ id: o.id, paid: !o.paid })}
+                    >
+                      <Check className="size-4" />
+                      {o.paid ? "Marcar como pendiente" : "Marcar como pagado"}
+                    </Button>
                   </div>
 
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -215,6 +257,29 @@ function AdminPage() {
                     >
                       <Copy className="size-4" /> Copiar mensaje
                     </Button>
+                    {!o.paid && reminderLink && (
+                      <Button
+                        asChild
+                        variant="secondary"
+                        className="gap-2 border border-amber-400/40 text-amber-300"
+                      >
+                        <a href={reminderLink} target="_blank" rel="noopener noreferrer">
+                          <BellRing className="size-4" /> Enviar recordatorio de pago
+                        </a>
+                      </Button>
+                    )}
+                    {!o.paid && (
+                      <Button
+                        variant="ghost"
+                        className="gap-2"
+                        onClick={() => {
+                          navigator.clipboard.writeText(reminder);
+                          toast.success("Recordatorio copiado");
+                        }}
+                      >
+                        <Copy className="size-4" /> Copiar recordatorio
+                      </Button>
+                    )}
                   </div>
                 </article>
               );
