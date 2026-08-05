@@ -2,14 +2,20 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Copy, Loader2, LockKeyhole, LogOut, MessageCircle } from "lucide-react";
+import { BellRing, Check, Copy, Loader2, LockKeyhole, LogOut, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { adminLogin, adminLogout, adminOrders, adminStatus } from "@/lib/admin.functions";
-import { buildWhatsappLink, buildWhatsappMessage } from "@/lib/raffle";
+import {
+  adminLogin,
+  adminLogout,
+  adminOrders,
+  adminSetPaid,
+  adminStatus,
+} from "@/lib/admin.functions";
+import { buildReminderMessage, buildWhatsappLink, buildWhatsappMessage } from "@/lib/raffle";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -40,6 +46,8 @@ type Order = {
   contact: string;
   created_at: string;
   numbers: string[];
+  paid: boolean;
+  paid_at: string | null;
 };
 
 function AdminPage() {
@@ -48,6 +56,7 @@ function AdminPage() {
   const login = useServerFn(adminLogin);
   const logout = useServerFn(adminLogout);
   const orders = useServerFn(adminOrders);
+  const setPaid = useServerFn(adminSetPaid);
   const [password, setPassword] = useState("");
 
   const session = useQuery({
@@ -81,6 +90,15 @@ function AdminPage() {
       queryClient.clear();
       queryClient.invalidateQueries({ queryKey: ["admin-status"] });
     },
+  });
+
+  const paidMutation = useMutation({
+    mutationFn: (vars: { id: string; paid: boolean }) => setPaid({ data: vars }),
+    onSuccess: (_res, vars) => {
+      toast.success(vars.paid ? "Marcado como pagado" : "Marcado como pendiente");
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+    },
+    onError: () => toast.error("No se pudo actualizar el pago"),
   });
 
   if (!unlocked) {
