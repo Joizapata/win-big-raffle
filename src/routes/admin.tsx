@@ -2,7 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { BellRing, Check, Copy, Loader2, LockKeyhole, LogOut, MessageCircle } from "lucide-react";
+import {
+  BellRing,
+  Check,
+  Clock,
+  Copy,
+  DollarSign,
+  Loader2,
+  LockKeyhole,
+  LogOut,
+  MessageCircle,
+  Ticket,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -148,6 +159,44 @@ function AdminPage() {
   }
 
   const list = ordersQuery.data ?? [];
+  const TOTAL_GROUPS = 25;
+  const PRICE = 20000;
+  const paidCount = list.filter((o) => o.paid).length;
+  const pendingCount = list.length - paidCount;
+  const soldPct = Math.round((list.length / TOTAL_GROUPS) * 100);
+  const paidPct = Math.round((paidCount / TOTAL_GROUPS) * 100);
+  const money = (n: number) =>
+    `$${n.toLocaleString("es-CO", { maximumFractionDigits: 0 })}`;
+  const stats = [
+    {
+      label: "Grupos vendidos",
+      value: `${list.length}/${TOTAL_GROUPS}`,
+      icon: Ticket,
+      tone: "text-primary",
+      bg: "bg-primary/15",
+    },
+    {
+      label: "Pagados",
+      value: String(paidCount),
+      icon: Check,
+      tone: "text-emerald-400",
+      bg: "bg-emerald-500/15",
+    },
+    {
+      label: "Pendientes",
+      value: String(pendingCount),
+      icon: Clock,
+      tone: "text-amber-400",
+      bg: "bg-amber-500/15",
+    },
+    {
+      label: "Recaudado",
+      value: money(paidCount * PRICE),
+      icon: DollarSign,
+      tone: "text-accent",
+      bg: "bg-accent/15",
+    },
+  ];
 
   return (
     <main className="min-h-screen bg-background px-4 pb-20 pt-8">
@@ -168,6 +217,62 @@ function AdminPage() {
             <LogOut className="size-4" /> Salir
           </Button>
         </div>
+
+        <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              className="rounded-2xl border border-primary/20 bg-card/70 p-4 shadow-[0_0_35px_-18px_oklch(0.55_0.25_280/0.8)]"
+            >
+              <span
+                className={`inline-flex size-8 items-center justify-center rounded-xl ${s.bg} ${s.tone}`}
+              >
+                <s.icon className="size-4" />
+              </span>
+              <p className={`mt-3 text-2xl font-black tabular-nums ${s.tone}`}>{s.value}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {s.label}
+              </p>
+            </div>
+          ))}
+        </section>
+
+        <section className="mt-4 rounded-2xl border border-primary/20 bg-card/70 p-5">
+          <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider">
+            <span className="text-muted-foreground">Avance de la rifa</span>
+            <span className="text-primary tabular-nums">{soldPct}%</span>
+          </div>
+          <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-background/70">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all"
+              style={{ width: `${soldPct}%` }}
+            />
+          </div>
+          <div className="mt-4 flex items-center justify-between text-xs font-bold uppercase tracking-wider">
+            <span className="text-muted-foreground">Pagos confirmados</span>
+            <span className="text-emerald-400 tabular-nums">{paidPct}%</span>
+          </div>
+          <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-background/70">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-300 transition-all"
+              style={{ width: `${paidPct}%` }}
+            />
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
+            <div className="rounded-xl border border-border/40 bg-background/50 p-3">
+              <p className="text-muted-foreground">Por cobrar</p>
+              <p className="mt-1 text-base font-black text-amber-400 tabular-nums">
+                {money(pendingCount * PRICE)}
+              </p>
+            </div>
+            <div className="rounded-xl border border-border/40 bg-background/50 p-3">
+              <p className="text-muted-foreground">Meta total</p>
+              <p className="mt-1 text-base font-black text-foreground tabular-nums">
+                {money(TOTAL_GROUPS * PRICE)}
+              </p>
+            </div>
+          </div>
+        </section>
 
         {ordersQuery.isLoading ? (
           <div className="flex justify-center py-20">
