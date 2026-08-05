@@ -182,6 +182,8 @@ function AdminPage() {
             {list.map((o) => {
               const message = buildWhatsappMessage(o.buyer_name, o.group_number, o.numbers);
               const link = buildWhatsappLink(o.contact, message);
+              const reminder = buildReminderMessage(o.buyer_name, o.group_number, o.numbers);
+              const reminderLink = buildWhatsappLink(o.contact, reminder);
               return (
                 <article
                   key={o.id}
@@ -195,6 +197,28 @@ function AdminPage() {
                     <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-primary">
                       Grupo {o.group_number}
                     </span>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-wider ${
+                        o.paid
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : "bg-amber-500/15 text-amber-400"
+                      }`}
+                    >
+                      {o.paid ? "Pagado" : "Pago pendiente"}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant={o.paid ? "secondary" : "default"}
+                      className="gap-2"
+                      disabled={paidMutation.isPending}
+                      onClick={() => paidMutation.mutate({ id: o.id, paid: !o.paid })}
+                    >
+                      <Check className="size-4" />
+                      {o.paid ? "Marcar como pendiente" : "Marcar como pagado"}
+                    </Button>
                   </div>
 
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -233,6 +257,29 @@ function AdminPage() {
                     >
                       <Copy className="size-4" /> Copiar mensaje
                     </Button>
+                    {!o.paid && reminderLink && (
+                      <Button
+                        asChild
+                        variant="secondary"
+                        className="gap-2 border border-amber-400/40 text-amber-300"
+                      >
+                        <a href={reminderLink} target="_blank" rel="noopener noreferrer">
+                          <BellRing className="size-4" /> Enviar recordatorio de pago
+                        </a>
+                      </Button>
+                    )}
+                    {!o.paid && (
+                      <Button
+                        variant="ghost"
+                        className="gap-2"
+                        onClick={() => {
+                          navigator.clipboard.writeText(reminder);
+                          toast.success("Recordatorio copiado");
+                        }}
+                      >
+                        <Copy className="size-4" /> Copiar recordatorio
+                      </Button>
+                    )}
                   </div>
                 </article>
               );
